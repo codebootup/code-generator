@@ -17,7 +17,7 @@
 
 package com.codebootup.codegenerator
 
-class CodeRenderer(
+class CodeRenderer @JvmOverloads constructor(
     private val modelBuilder: ModelBuilder<*>,
     private val templateEngine: TemplateEngine,
     val defaultTemplateLocation: FileLocation = DefaultLocation(),
@@ -83,10 +83,10 @@ class CodeRenderer(
     }
 }
 
-class TemplateRenderContext(
+class TemplateRenderContext @JvmOverloads constructor(
     val template: String,
-    val modelPathInFocus: String = ".",
     val fileNamingStrategy: FileNamingStrategy,
+    val modelPathInFocus: String = ".",
     val location: FileLocation = DefaultLocation(),
 )
 

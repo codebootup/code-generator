@@ -41,7 +41,7 @@ class CodeRendererTest {
                 )
             }
         }
-        val testOutputDirectory = "parent"
+        val testOutputDirectory = "mother"
         val baseDirectory = "${DirStatics.TEST_ACTUAL_OUTPUT_DIR}${File.separator}$testOutputDirectory"
         val outputDir = "com${File.separator}codebootup"
         val templateEngine = TemplateEngine()
@@ -79,6 +79,48 @@ class CodeRendererTest {
                     template = "per-child",
                     fileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt"),
                     modelPathInFocus = "Children",
+                ),
+            )
+            .render()
+
+        val expected = Path("${DirStatics.TEST_EXPECTED_OUTPUT_DIR}${File.separator}$testOutputDirectory")
+        val actual = Path(baseDirectory)
+
+        AssertDirectories.assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `can override default location`() {
+        val modelBuilder = object : ModelBuilder<Root?> {
+            override fun build(): Root {
+                return Root(
+                    name = "Tony",
+                    children = listOf(
+                        Children("Lee"),
+                        Children("Austin"),
+                        Children("Gemma"),
+                    ),
+                )
+            }
+        }
+        val testOutputDirectory = "farther"
+        val baseDirectory = "${DirStatics.TEST_ACTUAL_OUTPUT_DIR}${File.separator}$testOutputDirectory"
+        val outputDir = "com${File.separator}codebootup"
+        val templateEngine = TemplateEngine()
+        templateEngine.addTemplateResolver(templateResolver())
+
+        CodeRenderer(
+            modelBuilder = modelBuilder,
+            templateEngine = ThymeleafTemplateEngine(templateEngine),
+        )
+            .addTemplate(
+                TemplateRenderContext(
+                    template = "root",
+                    fileNamingStrategy = SimpleFileNamingStrategy(filename = "root-simple.txt"),
+                    location = TemplateLocation(
+                        fileDirectory = outputDir,
+                        baseDirectory = baseDirectory,
+                    ),
                 ),
             )
             .render()
