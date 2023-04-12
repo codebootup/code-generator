@@ -43,9 +43,6 @@ class CodeRendererTest {
         }
         val testOutputDirectory = "parent"
         val baseDirectory = "${DirStatics.TEST_ACTUAL_OUTPUT_DIR}${File.separator}$testOutputDirectory"
-        val itemInFocusFileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt")
-        val modelInFocusFileNamingStrategy = ModelInFocusFileNamingStrategy(path = "size", suffix = "txt")
-        val rootInFocusFileNamingStrategy = RootFileNamingStrategy(path = "name", suffix = "txt")
         val outputDir = "com${File.separator}codebootup"
         val templateEngine = TemplateEngine()
         templateEngine.addTemplateResolver(templateResolver())
@@ -61,26 +58,26 @@ class CodeRendererTest {
             .addTemplate(
                 TemplateRenderContext(
                     template = "root",
-                    fileNamingStrategy = SimpleFileNamingStrategy("root-simple.txt"),
+                    fileNamingStrategy = SimpleFileNamingStrategy(filename = "root-simple.txt"),
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "root",
-                    fileNamingStrategy = rootInFocusFileNamingStrategy,
+                    fileNamingStrategy = RootFileNamingStrategy(path = "name", suffix = "txt"),
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "children",
-                    fileNamingStrategy = modelInFocusFileNamingStrategy,
+                    fileNamingStrategy = ModelInFocusFileNamingStrategy(path = "size", suffix = "txt"),
                     modelPathInFocus = "Children",
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "per-child",
-                    fileNamingStrategy = itemInFocusFileNamingStrategy,
+                    fileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt"),
                     modelPathInFocus = "Children",
                 ),
             )
