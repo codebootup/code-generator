@@ -53,21 +53,21 @@ class CodeRendererTest {
         CodeRenderer(
             modelBuilder = modelBuilder,
             templateEngine = ThymeleafTemplateEngine(templateEngine),
+            defaultTemplateLocation = TemplateLocation(
+                fileDirectory = outputDir,
+                baseDirectory = baseDirectory,
+            ),
         )
             .addTemplate(
                 TemplateRenderContext(
                     template = "root",
                     fileNamingStrategy = SimpleFileNamingStrategy("root-simple.txt"),
-                    fileDirectory = outputDir,
-                    baseDirectory = baseDirectory,
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "root",
                     fileNamingStrategy = rootInFocusFileNamingStrategy,
-                    fileDirectory = outputDir,
-                    baseDirectory = baseDirectory,
                 ),
             )
             .addTemplate(
@@ -75,17 +75,13 @@ class CodeRendererTest {
                     template = "children",
                     fileNamingStrategy = modelInFocusFileNamingStrategy,
                     modelPathInFocus = "Children",
-                    fileDirectory = outputDir,
-                    baseDirectory = baseDirectory,
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "per-child",
                     fileNamingStrategy = itemInFocusFileNamingStrategy,
-                    fileDirectory = outputDir,
                     modelPathInFocus = "Children",
-                    baseDirectory = baseDirectory,
                 ),
             )
             .render()

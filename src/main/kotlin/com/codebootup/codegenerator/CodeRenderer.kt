@@ -3,11 +3,22 @@ package com.codebootup.codegenerator
 class CodeRenderer(
     private val modelBuilder: ModelBuilder<*>,
     private val templateEngine: TemplateEngine,
+    val defaultTemplateLocation: FileLocation = DefaultLocation(),
 ) {
     private val templates: MutableList<TemplateRenderContext> = mutableListOf()
 
-    fun addTemplate(templatePath: TemplateRenderContext): CodeRenderer {
-        templates.add(templatePath)
+    fun addTemplate(template: TemplateRenderContext): CodeRenderer {
+        if (template.location is DefaultLocation) {
+            val templateWithDefaultLocation = TemplateRenderContext(
+                template = template.template,
+                modelPathInFocus = template.modelPathInFocus,
+                fileNamingStrategy = template.fileNamingStrategy,
+                location = defaultTemplateLocation,
+            )
+            templates.add(templateWithDefaultLocation)
+        } else {
+            templates.add(template)
+        }
         return this
     }
 
@@ -54,3 +65,25 @@ class CodeRenderer(
         )
     }
 }
+
+class TemplateRenderContext(
+    val template: String,
+    val modelPathInFocus: String = ".",
+    val fileNamingStrategy: FileNamingStrategy,
+    val location: FileLocation = DefaultLocation(),
+)
+
+interface FileLocation {
+    val baseDirectory: String
+    val fileDirectory: String
+}
+
+private data class DefaultLocation(
+    override val baseDirectory: String = "",
+    override val fileDirectory: String = "",
+) : FileLocation
+
+data class TemplateLocation(
+    override val baseDirectory: String = "",
+    override val fileDirectory: String = "",
+) : FileLocation
