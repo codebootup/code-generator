@@ -1,9 +1,16 @@
 package com.codebootup.codegenerator
 
-import java.io.Writer
-
 interface TemplateEngine {
-    fun process(template: String, context: TemplateContext, writer: Writer)
+    fun process(context: TemplateContext)
 }
 
-data class TemplateContext(val context: Map<String, *>)
+class TemplateContext(
+    templateRenderContext: TemplateRenderContext,
+    val model: TemplateModel
+){
+    val template = templateRenderContext.template
+    val writerBuilder: WriterBuilder = DefaultWriterBuilder(
+        templateRenderContext = templateRenderContext,
+        filename = templateRenderContext.fileNamingStrategy.name(model.itemInFocus)
+    )
+}

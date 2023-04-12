@@ -1,1 +1,1 @@
-Child
+[(${root.name})] - [(${itemInFocus.name})]

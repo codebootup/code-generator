@@ -1,12 +1,11 @@
 package com.codebootup.codegenerator
 
 import org.thymeleaf.context.Context
-import java.io.Writer
 
 class ThymeleafTemplateEngine(private val templateEngine: org.thymeleaf.TemplateEngine) : TemplateEngine {
-    override fun process(template: String, context: TemplateContext, writer: Writer) {
+    override fun process(context: TemplateContext) {
         val tlContext = Context()
-        tlContext.setVariables(context.context)
-        templateEngine.process(template, tlContext, writer)
+        tlContext.setVariables(context.model.toMap())
+        templateEngine.process(context.template, tlContext, context.writerBuilder.build())
     }
 }

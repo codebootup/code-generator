@@ -14,3 +14,8 @@ class ItemInFocusFileNamingStrategy(private val path: String, private val suffix
         return "${(parser.parseExpression(path).getValue(model) as String)}.$suffix"
     }
 }
+
+class SimpleFileNamingStrategy(private val filename : String) : FileNamingStrategy{
+    override fun name(model: Any): String = filename
+
+}

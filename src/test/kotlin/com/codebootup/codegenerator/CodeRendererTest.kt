@@ -1,6 +1,7 @@
 package com.codebootup.codegenerator
 
 import com.codebootup.compare.AssertDirectories
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.Test
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
@@ -9,10 +10,27 @@ import java.io.File
 import kotlin.io.path.Path
 
 class CodeRendererTest {
+
     @Test
-    fun `test`(){
-        val modelBuilder = object: ModelBuilder<Parent>{
-            override fun build(): Parent {
+    fun `throws IllegalArgumentException when model returns null object`(){
+        val modelBuilder = object: ModelBuilder<Any?>{
+            override fun build(): Any? {
+                return null
+            }
+        }
+
+        assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+            CodeRenderer(
+                modelBuilder = modelBuilder,
+                templateEngine = ThymeleafTemplateEngine(TemplateEngine())
+            ).render()
+        }.withMessage("Model builder must return a non null value")
+
+    }
+    @Test
+    fun `can render parent child files`(){
+        val modelBuilder = object: ModelBuilder<Parent?>{
+            override fun build(): Parent? {
                 return Parent("Elaine", listOf(
                     Children("Lee"),
                     Children("Austin"),
@@ -29,20 +47,28 @@ class CodeRendererTest {
 
         CodeRenderer(
             modelBuilder = modelBuilder,
-            templateEngine = ThymeleafTemplateEngine(templateEngine),
-            writerBuilder = WriterBuilder(baseDirectory)
+            templateEngine = ThymeleafTemplateEngine(templateEngine)
         )
-        .addTemplate(TemplatePath(
+        .addTemplate(TemplateRenderContext(
             template = "perParent",
             fileNamingStrategy = fileNamingStrategy,
-            fileDirectory = outputDir
+            fileDirectory = outputDir,
+            baseDirectory = baseDirectory
         ))
-        .addTemplate(TemplatePath(
+        .addTemplate(TemplateRenderContext(
             template = "perChild",
             fileNamingStrategy = fileNamingStrategy,
             fileDirectory = outputDir,
-            itemInFocus = "Children"
-        )).render()
+            modelPathInFocus = "Children",
+            baseDirectory = baseDirectory
+        ))
+        .addTemplate(TemplateRenderContext(
+            template = "simple",
+            fileNamingStrategy = SimpleFileNamingStrategy("Simple.txt"),
+            fileDirectory = outputDir,
+            baseDirectory = baseDirectory
+        ))
+        .render()
 
         val expected = Path("${DirStatics.TEST_EXPECTED_OUTPUT_DIR}${File.separator}$testOutputDirectory")
         val actual = Path(baseDirectory)

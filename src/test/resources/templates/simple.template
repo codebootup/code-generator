@@ -1,0 +1,3 @@
+[(${modelInFocus.name})]
+[# th:each="child : ${modelInFocus.children}"]- [(${child.name})]
+[/]

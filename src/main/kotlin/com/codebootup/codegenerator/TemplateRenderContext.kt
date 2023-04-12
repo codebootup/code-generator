@@ -1,8 +1,9 @@
 package com.codebootup.codegenerator
 
-data class TemplatePath(
+class TemplateRenderContext(
     val template: String,
-    val itemInFocus: String = ".",
+    val modelPathInFocus: String = ".",
     val fileNamingStrategy: FileNamingStrategy,
+    val baseDirectory: String,
     val fileDirectory: String
 )

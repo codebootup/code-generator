@@ -1,53 +1,65 @@
 package com.codebootup.codegenerator
 
 import org.springframework.expression.ExpressionParser
+import org.springframework.expression.ParseException
 import org.springframework.expression.spel.standard.SpelExpressionParser
 
 class CodeRenderer(
     private val modelBuilder: ModelBuilder<*>,
-    private val templateEngine: TemplateEngine,
-    private val writerBuilder: WriterBuilder
+    private val templateEngine: TemplateEngine
 ) {
     private val parser: ExpressionParser = SpelExpressionParser()
-    private val templates: MutableList<TemplatePath> = mutableListOf()
+    private val templates: MutableList<TemplateRenderContext> = mutableListOf()
 
-    fun addTemplate(templatePath: TemplatePath) : CodeRenderer{
+    fun addTemplate(templatePath: TemplateRenderContext) : CodeRenderer{
         templates.add(templatePath)
         return this
     }
 
     fun render(){
-        val output = modelBuilder.build()
-        templates.forEach { templatePath ->
-            val model = if(templatePath.itemInFocus != "."){
-                parser.parseExpression(templatePath.itemInFocus).getValue(output)!!
+        val root = modelBuilder.build() ?: throw IllegalArgumentException("Model builder must return a non null value")
+
+        templates.forEach { templateRenderContext ->
+            val modelInFocus = if(templateRenderContext.modelPathInFocus != "."){
+                val itemInFocus = parser.parseExpression(templateRenderContext.modelPathInFocus).getValue(root) ?: throw ParseException(
+                    0, "SpelExpressionParser Unexpectedly returned null when ParseException expected instead"
+                )
+                itemInFocus
             }
             else{
-                output!!
+                root
             }
-            val modelMap: MutableMap<String, Any> = mutableMapOf()
-            modelMap["root"] = output!!
-            if(model is Iterable<*>){
-                model.filterNotNull().forEach { process(modelMap, it, templatePath) }
+
+            if(modelInFocus is Iterable<*>){
+                modelInFocus.filterNotNull().forEach {
+                    val templateContext = TemplateContext(
+                        templateRenderContext = templateRenderContext,
+                        model = TemplateModel(
+                            root = root,
+                            modelInFocus = modelInFocus,
+                            itemInFocus = it
+                        )
+                    )
+                    process(templateContext)
+                }
             }
             else{
-                process(modelMap, model, templatePath)
+                val templateContext = TemplateContext(
+                    templateRenderContext = templateRenderContext,
+                    model = TemplateModel(
+                        root = root,
+                        modelInFocus = modelInFocus,
+                        itemInFocus = modelInFocus
+                    )
+                )
+                process(templateContext)
             }
         }
     }
 
-    private fun process(modelMap: MutableMap<String, Any>, model: Any, templatePath: TemplatePath) {
-        modelMap["itemInFocus"] = model
-        modelMap["fileDirectory"] = templatePath.fileDirectory
-        val filename = templatePath.fileNamingStrategy.name(model)
-        val writer = writerBuilder.build(
-            directory = templatePath.fileDirectory,
-            filename = filename
-        )
+    private fun process(templateContext: TemplateContext) {
         templateEngine.process(
-            template = templatePath.template,
-            context = TemplateContext(modelMap),
-            writer = writer
+            context = templateContext
         )
     }
 }
