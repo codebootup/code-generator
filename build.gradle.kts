@@ -144,3 +144,7 @@ tasks.named("jacocoTestReport", JacocoReport::class.java) {
         xml.required.set(true)
     }
 }
+
+tasks.named("clean", Delete::class) {
+    delete = this.delete + "src/test/resources/act"
+}
