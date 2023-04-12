@@ -8,7 +8,6 @@ class CodeRenderer(
     private val modelBuilder: ModelBuilder<*>,
     private val templateEngine: TemplateEngine
 ) {
-    private val parser: ExpressionParser = SpelExpressionParser()
     private val templates: MutableList<TemplateRenderContext> = mutableListOf()
 
     fun addTemplate(templatePath: TemplateRenderContext) : CodeRenderer{
@@ -21,7 +20,7 @@ class CodeRenderer(
 
         templates.forEach { templateRenderContext ->
             val modelInFocus = if(templateRenderContext.modelPathInFocus != "."){
-                val itemInFocus = parser.parseExpression(templateRenderContext.modelPathInFocus).getValue(root) ?: throw ParseException(
+                val itemInFocus = SpelExpressionParserObject.parseExpression(templateRenderContext.modelPathInFocus).getValue(root) ?: throw ParseException(
                     0, "SpelExpressionParser Unexpectedly returned null when ParseException expected instead"
                 )
                 itemInFocus

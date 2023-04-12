@@ -1,37 +1,45 @@
 package com.codebootup.codegenerator
 
-import org.springframework.expression.ExpressionParser
-import org.springframework.expression.spel.standard.SpelExpressionParser
-
 interface FileNamingStrategy {
     fun name(model: TemplateModel) : String
 }
 
 class ItemInFocusFileNamingStrategy(private val path: String, private val suffix: String) : FileNamingStrategy{
-    private val parser: ExpressionParser = SpelExpressionParser()
-
-    override fun name(model: TemplateModel): String {
-        return "${(parser.parseExpression(path).getValue(model.itemInFocus)?.toString())}.$suffix"
-    }
+    override fun name(model: TemplateModel): String = ExpressionParserFileNamingStrategy(
+            path = path,
+            suffix = suffix,
+            model = model.itemInFocus
+        ).parse()
 }
 
 class ModelInFocusFileNamingStrategy(private val path: String, private val suffix: String) : FileNamingStrategy{
-    private val parser: ExpressionParser = SpelExpressionParser()
 
-    override fun name(model: TemplateModel): String {
-        return "${(parser.parseExpression(path).getValue(model.modelInFocus)?.toString())}.$suffix"
-    }
+    override fun name(model: TemplateModel): String = ExpressionParserFileNamingStrategy(
+            path = path,
+            suffix = suffix,
+            model = model.modelInFocus
+        ).parse()
 }
 
 class RootFileNamingStrategy(private val path: String, private val suffix: String) : FileNamingStrategy{
-    private val parser: ExpressionParser = SpelExpressionParser()
 
-    override fun name(model: TemplateModel): String {
-        return "${(parser.parseExpression(path).getValue(model.root)?.toString())}.$suffix"
-    }
+    override fun name(model: TemplateModel): String = ExpressionParserFileNamingStrategy(
+        path = path,
+        suffix = suffix,
+        model = model.root
+    ).parse()
 }
 
 class SimpleFileNamingStrategy(private val filename : String) : FileNamingStrategy{
     override fun name(model: TemplateModel): String = filename
 
+}
+
+private class ExpressionParserFileNamingStrategy(
+    private val model: Any,
+    private val path: String,
+    private val suffix: String){
+    fun parse() : String{
+        return "${(SpelExpressionParserObject.parseExpression(path).getValue(model)?.toString())}.$suffix"
+    }
 }

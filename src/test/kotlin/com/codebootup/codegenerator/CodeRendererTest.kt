@@ -44,7 +44,7 @@ class CodeRendererTest {
         val baseDirectory = "${DirStatics.TEST_ACTUAL_OUTPUT_DIR}${File.separator}$testOutputDirectory"
         val itemInFocusFileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt")
         val modelInFocusFileNamingStrategy = ModelInFocusFileNamingStrategy(path = "size", suffix = "txt")
-        val rootInFocusFileNamingStrategy = ModelInFocusFileNamingStrategy(path = "name", suffix = "txt")
+        val rootInFocusFileNamingStrategy = RootFileNamingStrategy(path = "name", suffix = "txt")
         val outputDir = "com${File.separator}codebootup"
         val templateEngine = TemplateEngine()
         templateEngine.addTemplateResolver(templateResolver())
