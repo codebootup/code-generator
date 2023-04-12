@@ -1,3 +1,0 @@
-[(${root.name})]
-[# th:each="child : ${root.children}"]- [(${child.name})]
-[/]

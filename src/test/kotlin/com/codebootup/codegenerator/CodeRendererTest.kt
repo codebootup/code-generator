@@ -29,18 +29,22 @@ class CodeRendererTest {
     }
     @Test
     fun `can render parent child files`(){
-        val modelBuilder = object: ModelBuilder<Parent?>{
-            override fun build(): Parent? {
-                return Parent("Elaine", listOf(
-                    Children("Lee"),
-                    Children("Austin"),
-                    Children("Gemma"),
-                ))
+        val modelBuilder = object: ModelBuilder<Root?>{
+            override fun build(): Root {
+                return Root(name = "Elaine",
+                    children = listOf(
+                        Children("Lee"),
+                        Children("Austin"),
+                        Children("Gemma"),
+                    ),
+                )
             }
         }
         val testOutputDirectory = "parent"
         val baseDirectory = "${DirStatics.TEST_ACTUAL_OUTPUT_DIR}${File.separator}$testOutputDirectory"
-        val fileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt")
+        val itemInFocusFileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt")
+        val modelInFocusFileNamingStrategy = ModelInFocusFileNamingStrategy(path = "size", suffix = "txt")
+        val rootInFocusFileNamingStrategy = ModelInFocusFileNamingStrategy(path = "name", suffix = "txt")
         val outputDir = "com${File.separator}codebootup"
         val templateEngine = TemplateEngine()
         templateEngine.addTemplateResolver(templateResolver())
@@ -50,22 +54,29 @@ class CodeRendererTest {
             templateEngine = ThymeleafTemplateEngine(templateEngine)
         )
         .addTemplate(TemplateRenderContext(
-            template = "perParent",
-            fileNamingStrategy = fileNamingStrategy,
+            template = "root",
+            fileNamingStrategy = SimpleFileNamingStrategy("root-simple.txt"),
             fileDirectory = outputDir,
             baseDirectory = baseDirectory
         ))
         .addTemplate(TemplateRenderContext(
-            template = "perChild",
-            fileNamingStrategy = fileNamingStrategy,
+            template = "root",
+            fileNamingStrategy = rootInFocusFileNamingStrategy,
+            fileDirectory = outputDir,
+            baseDirectory = baseDirectory
+        ))
+        .addTemplate(TemplateRenderContext(
+            template = "children",
+            fileNamingStrategy = modelInFocusFileNamingStrategy,
+            modelPathInFocus = "Children",
+            fileDirectory = outputDir,
+            baseDirectory = baseDirectory
+        ))
+        .addTemplate(TemplateRenderContext(
+            template = "per-child",
+            fileNamingStrategy = itemInFocusFileNamingStrategy,
             fileDirectory = outputDir,
             modelPathInFocus = "Children",
-            baseDirectory = baseDirectory
-        ))
-        .addTemplate(TemplateRenderContext(
-            template = "simple",
-            fileNamingStrategy = SimpleFileNamingStrategy("Simple.txt"),
-            fileDirectory = outputDir,
             baseDirectory = baseDirectory
         ))
         .render()

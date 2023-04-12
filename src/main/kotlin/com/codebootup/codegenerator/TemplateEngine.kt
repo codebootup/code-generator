@@ -11,6 +11,6 @@ class TemplateContext(
     val template = templateRenderContext.template
     val writerBuilder: WriterBuilder = DefaultWriterBuilder(
         templateRenderContext = templateRenderContext,
-        filename = templateRenderContext.fileNamingStrategy.name(model.itemInFocus)
+        filename = templateRenderContext.fileNamingStrategy.name(model)
     )
 }
