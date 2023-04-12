@@ -5,5 +5,5 @@ class TemplateRenderContext(
     val modelPathInFocus: String = ".",
     val fileNamingStrategy: FileNamingStrategy,
     val baseDirectory: String,
-    val fileDirectory: String
+    val fileDirectory: String,
 )

@@ -6,11 +6,11 @@ interface TemplateEngine {
 
 class TemplateContext(
     templateRenderContext: TemplateRenderContext,
-    val model: TemplateModel
-){
+    val model: TemplateModel,
+) {
     val template = templateRenderContext.template
     val writerBuilder: WriterBuilder = DefaultWriterBuilder(
         templateRenderContext = templateRenderContext,
-        filename = templateRenderContext.fileNamingStrategy.name(model)
+        filename = templateRenderContext.fileNamingStrategy.name(model),
     )
 }

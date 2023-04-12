@@ -1,53 +1,47 @@
 package com.codebootup.codegenerator
 
-import org.springframework.expression.ExpressionParser
-import org.springframework.expression.ParseException
-import org.springframework.expression.spel.standard.SpelExpressionParser
-
 class CodeRenderer(
     private val modelBuilder: ModelBuilder<*>,
-    private val templateEngine: TemplateEngine
+    private val templateEngine: TemplateEngine,
 ) {
     private val templates: MutableList<TemplateRenderContext> = mutableListOf()
 
-    fun addTemplate(templatePath: TemplateRenderContext) : CodeRenderer{
+    fun addTemplate(templatePath: TemplateRenderContext): CodeRenderer {
         templates.add(templatePath)
         return this
     }
 
-    fun render(){
+    fun render() {
         val root = modelBuilder.build() ?: throw IllegalArgumentException("Model builder must return a non null value")
 
         templates.forEach { templateRenderContext ->
-            val modelInFocus = if(templateRenderContext.modelPathInFocus != "."){
+            val modelInFocus = if (templateRenderContext.modelPathInFocus != ".") {
                 val itemInFocus = SpelExpressionParserObject.parseExpression(templateRenderContext.modelPathInFocus).getValue(root) ?: throw CodeGeneratorParseException()
                 itemInFocus
-            }
-            else{
+            } else {
                 root
             }
 
-            if(modelInFocus is Iterable<*>){
+            if (modelInFocus is Iterable<*>) {
                 modelInFocus.filterNotNull().forEach {
                     val templateContext = TemplateContext(
                         templateRenderContext = templateRenderContext,
                         model = TemplateModel(
                             root = root,
                             modelInFocus = modelInFocus,
-                            itemInFocus = it
-                        )
+                            itemInFocus = it,
+                        ),
                     )
                     process(templateContext)
                 }
-            }
-            else{
+            } else {
                 val templateContext = TemplateContext(
                     templateRenderContext = templateRenderContext,
                     model = TemplateModel(
                         root = root,
                         modelInFocus = modelInFocus,
-                        itemInFocus = modelInFocus
-                    )
+                        itemInFocus = modelInFocus,
+                    ),
                 )
                 process(templateContext)
             }
@@ -56,7 +50,7 @@ class CodeRenderer(
 
     private fun process(templateContext: TemplateContext) {
         templateEngine.process(
-            context = templateContext
+            context = templateContext,
         )
     }
 }
