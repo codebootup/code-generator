@@ -20,9 +20,7 @@ class CodeRenderer(
 
         templates.forEach { templateRenderContext ->
             val modelInFocus = if(templateRenderContext.modelPathInFocus != "."){
-                val itemInFocus = SpelExpressionParserObject.parseExpression(templateRenderContext.modelPathInFocus).getValue(root) ?: throw ParseException(
-                    0, "SpelExpressionParser Unexpectedly returned null when ParseException expected instead"
-                )
+                val itemInFocus = SpelExpressionParserObject.parseExpression(templateRenderContext.modelPathInFocus).getValue(root) ?: throw CodeGeneratorParseException()
                 itemInFocus
             }
             else{

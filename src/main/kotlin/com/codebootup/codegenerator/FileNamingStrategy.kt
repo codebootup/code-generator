@@ -1,5 +1,7 @@
 package com.codebootup.codegenerator
 
+import org.springframework.expression.ParseException
+
 interface FileNamingStrategy {
     fun name(model: TemplateModel) : String
 }
@@ -40,6 +42,6 @@ private class ExpressionParserFileNamingStrategy(
     private val path: String,
     private val suffix: String){
     fun parse() : String{
-        return "${(SpelExpressionParserObject.parseExpression(path).getValue(model)?.toString())}.$suffix"
+        return "${(SpelExpressionParserObject.parseExpression(path).getValue(model)?.toString() ?: throw CodeGeneratorParseException())}.$suffix"
     }
 }
