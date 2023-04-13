@@ -120,3 +120,7 @@ File naming strategies include:
 ```
 
 Please see ```src/test/java``` for more examples in java. 
+
+## Testing your code generator
+Consider using -> https://github.com/codebootup/compare-directories it will allow you to compare the generate code with 
+your expected code.  End-to-end test effectively reducing the need for coupling unit tests.  
