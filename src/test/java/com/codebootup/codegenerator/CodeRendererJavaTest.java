@@ -1,7 +1,7 @@
 package com.codebootup.codegenerator;
 
 import com.codebootup.compare.AssertDirectories;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;

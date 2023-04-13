@@ -4,7 +4,7 @@ plugins {
     signing
     `maven-publish`
     jacoco
-    id("com.codebootup.kotlin") version "1.0.0"
+    id("com.codebootup.kotlin") version "1.0.1"
     id("org.jetbrains.dokka") version "1.8.10"
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     id("com.diffplug.spotless") version "6.18.0"
