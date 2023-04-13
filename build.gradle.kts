@@ -24,11 +24,6 @@ dependencies {
 group = "com.codebootup.code-generator"
 version = (project.properties["buildVersion"] ?: "1.0.0-SNAPSHOT")
 
-dependencies {
-    implementation("commons-io:commons-io:2.11.0")
-    implementation("org.assertj:assertj-core:3.24.2")
-}
-
 val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(kotlin.sourceSets.main.get().kotlin)
