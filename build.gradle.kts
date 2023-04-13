@@ -21,7 +21,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.24.2")
 }
 
-group = "com.codebootup.compare-directories"
+group = "com.codebootup.code-generator"
 version = (project.properties["buildVersion"] ?: "1.0.0-SNAPSHOT")
 
 dependencies {
