@@ -16,7 +16,14 @@
  */
 
 package com.codebootup.codegenerator
-
+/**
+ * Concrete class allowing the user to aggregate TemplateRenderContext (not-thread-safe)
+ *
+ * @constructor Creates a template free CodeRenderer for a model and a template engine
+ * @param modelBuilder the factory to build the model that goes into the template
+ * @param templateEngine the template engine used to render the files
+ * @param defaultTemplateLocation optional default location for template rendering
+ */
 class CodeRenderer @JvmOverloads constructor(
     private val modelBuilder: ModelBuilder<*>,
     private val templateEngine: TemplateEngine,
@@ -24,6 +31,11 @@ class CodeRenderer @JvmOverloads constructor(
 ) {
     private val templates: MutableList<TemplateRenderContext> = mutableListOf()
 
+    /**
+     * Adds a template to the code renderer
+     *
+     * @param template context for the template render
+     */
     fun addTemplate(template: TemplateRenderContext): CodeRenderer {
         if (template.location is DefaultLocation) {
             val templateWithDefaultLocation = TemplateRenderContext(
@@ -39,6 +51,9 @@ class CodeRenderer @JvmOverloads constructor(
         return this
     }
 
+    /**
+     * Renders all templates
+     */
     fun render() {
         val root = modelBuilder.build() ?: throw IllegalArgumentException("Model builder must return a non null value")
 
@@ -83,6 +98,14 @@ class CodeRenderer @JvmOverloads constructor(
     }
 }
 
+/**
+ * Concrete class allowing the user to define template render details
+ *
+ * @constructor Creates a TemplateRenderContext
+ * @param template the key for the template that the template engine uses to look up the template
+ * @param fileNamingStrategy the file naming strategy to use
+ * @param location the location where the template should be rendered
+ */
 class TemplateRenderContext @JvmOverloads constructor(
     val template: String,
     val fileNamingStrategy: FileNamingStrategy,

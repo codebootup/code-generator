@@ -29,7 +29,7 @@ interface FileNamingStrategy {
  */
 class ItemInFocusFileNamingStrategy(
     private val pathExpression: String,
-    private val suffix: String
+    private val suffix: String,
 ) : FileNamingStrategy {
     override fun name(model: TemplateModel): String = ExpressionParserFileNamingStrategy(
         pathExpression = pathExpression,
@@ -46,7 +46,7 @@ class ItemInFocusFileNamingStrategy(
  */
 class ModelInFocusFileNamingStrategy(
     private val pathExpression: String,
-    private val suffix: String
+    private val suffix: String,
 ) : FileNamingStrategy {
     override fun name(model: TemplateModel): String = ExpressionParserFileNamingStrategy(
         pathExpression = pathExpression,
@@ -63,7 +63,7 @@ class ModelInFocusFileNamingStrategy(
  */
 class RootFileNamingStrategy(
     private val pathExpression: String,
-    private val suffix: String
+    private val suffix: String,
 ) : FileNamingStrategy {
     override fun name(model: TemplateModel): String = ExpressionParserFileNamingStrategy(
         pathExpression = pathExpression,
