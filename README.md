@@ -1,17 +1,17 @@
 # code-generator
-Core library to support code generation.  There are some common functions that most code generators and this library's 
-intention is to meet those needs.
+Core JVM (Written in Kotlin can be used in Java projects) library to support code generation.  There are some common 
+functions that most code generators need and this library intends is to meet those needs.
 
 The codebootup code generator allows developers to quickly developer their own code generators.  A typical use case 
 would be to generate code from some schema for example OpenApi, JSON schema, WSDL.  Typically, domain models and api 
-interfaces defining operations and sometimes implementations are code generated.
+interfaces defining operations and sometimes implementations and tests are code generated.
 
-Typically most code generation in the opensource community is poor, and you never actually get exactly what you want.
+Most code generation in the opensource community is poor, and you never actually get exactly what you want.
 This library will help you quickly get up and running with your own code generator and stay out of your way at the same 
 time.
 
-The library performs two main functions it allows you to bind a part of your model to a template and gives you the option 
-of a number of out of the box file naming strategies for the rendered template output.
+The library performs two main functions. It allows you to bind a part of your model to a template and gives you the 
+option of a number of out of the box file naming strategies for the rendered template output.
 
 So you as a developer are in charge of defining what input model you want to use and then based on that model what files 
 should be generated using which templates for which bits of the model.
@@ -43,6 +43,23 @@ class ThymeleafTemplateEngine(private val templateEngine: org.thymeleaf.Template
         templateEngine.process(context.template, tlContext, context.writerBuilder.build())
     }
 }
+```
+Add as many templates as you like at a minimum you must supply the template key, file naming strategy.  If you
+do not specify the model in focus then the root of the model will be used.  There are also options for defining the
+base directory and file directory paths for  where the files are rendered that are not in this example.
+https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html
+```
+.addTemplate(
+    TemplateRenderContext(
+        template = "per-child", //Name of the template how your tempalte engine looks up the template to use
+        fileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt"), //What to name the model
+        modelPathInFocus = "Children", 
+        
+        //Both modelPathInFocus and ItemInFocusFileNamingStrategy use SPEL to extract the bit of the model you are 
+        //interested in for the template  
+        //https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html
+    ),
+)
 ```
 Full example below
 ```
