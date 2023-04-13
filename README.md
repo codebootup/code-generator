@@ -47,7 +47,7 @@ class ThymeleafTemplateEngine(private val templateEngine: org.thymeleaf.Template
 Add as many templates as you like at a minimum you must supply the template key, file naming strategy.  If you
 do not specify the model in focus then the root of the model will be used.  There are also options for defining the
 base directory and file directory paths for  where the files are rendered that are not in this example.
-The project used SPEL in twice once in extracting the bit of the model you are interested in and secondly in some of 
+The project used SPEL twice, once in extracting the bit of the model you are interested in and secondly in some of 
 the file naming strategies.
 https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html
 ```
