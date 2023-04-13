@@ -64,21 +64,21 @@ class CodeRendererTest {
             .addTemplate(
                 TemplateRenderContext(
                     template = "root",
-                    fileNamingStrategy = RootFileNamingStrategy(path = "name", suffix = "txt"),
+                    fileNamingStrategy = RootFileNamingStrategy(pathExpression = Root::name.name, suffix = "txt"),
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "children",
-                    fileNamingStrategy = ModelInFocusFileNamingStrategy(path = "size", suffix = "txt"),
-                    modelPathInFocus = "Children",
+                    fileNamingStrategy = ModelInFocusFileNamingStrategy(pathExpression = List<Children>::size.name, suffix = "txt"),
+                    modelPathInFocus = Root::children.name,
                 ),
             )
             .addTemplate(
                 TemplateRenderContext(
                     template = "per-child",
-                    fileNamingStrategy = ItemInFocusFileNamingStrategy(path = "name", suffix = "txt"),
-                    modelPathInFocus = "Children",
+                    fileNamingStrategy = ItemInFocusFileNamingStrategy(pathExpression = Root::name.name, suffix = "txt"),
+                    modelPathInFocus = Root::children.name,
                 ),
             )
             .render()
