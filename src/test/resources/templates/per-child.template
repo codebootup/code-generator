@@ -1,1 +1,1 @@
-[(${root.name})] - [(${itemInFocus.name})]
+[(${root.name})] - [(${itemInFocus.name})] - Number of children in the family {[(${modelInFocus.size})]}

@@ -38,17 +38,17 @@ To produce these simple files for example:
 ```
 ```shell
 $ cat Child1.txt 
-"Parent - Child1"
+"Parent - Child1 - Number of children in the family {3}"
 
 $ cat Child2.txt
-"Parent - Child2" 
+"Parent - Child2 - Number of children in the family {3}" 
 
 $ cat Child3.txt
-"Parent - Child3"
+"Parent - Child3 - Number of children in the family {3}"
 ```
 Use Thymeleaf "per-child" template example
 ```
-[(${root.name})] - [(${itemInFocus.name})]
+[(${root.name})] - [(${itemInFocus.name})] - Number of children in the family {[(${modelInFocus.size})]}
 ```
 This file naming strategy uses [Spring Expression Language (SPEL)](https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html) to find the name of the child and use it as the filename of the file 
 ```
